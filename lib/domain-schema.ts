@@ -23,30 +23,3 @@ export const auditLog = pgTable('audit_log', {
   ipAddress: text('ip_address'),
   createdAt: timestamp('created_at').notNull().default(now()),
 });
-
-// Track product import/export compliance documents
-export const customsDeclarations = pgTable('customs_declarations', {
-  id: text('id').primaryKey(),
-  userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
-  productName: text('product_name').notNull(),
-  hsCode: text('hs_code').notNull(),
-  originCountry: text('origin_country').notNull(),
-  destinationCountry: text('destination_country').notNull(),
-  complianceStatus: text('compliance_status').default('pending'),
-  riskScore: integer('risk_score').default(0),
-  declarationDetails: jsonb('declaration_details'),
-  createdAt: timestamp('created_at').notNull(),
-  updatedAt: timestamp('updated_at').notNull(),
-});
-
-// AI-generated compliance analysis reports
-export const complianceReports = pgTable('compliance_reports', {
-  id: text('id').primaryKey(),
-  userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
-  declarationId: text('declaration_id').references(() => customsDeclarations.id, { onDelete: 'cascade' }),
-  recommendations: jsonb('recommendations').notNull(),
-  tariffEstimate: text('tariff_estimate').notNull(),
-  complianceRisk: text('compliance_risk').notNull(),
-  createdAt: timestamp('created_at').notNull(),
-  updatedAt: timestamp('updated_at').notNull(),
-});
